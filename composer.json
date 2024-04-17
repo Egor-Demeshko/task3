@@ -1,0 +1,16 @@
+{
+    "name": "egor/task3",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Egor Demeshko",
+            "email": "demeshko.egor@gmail.com"
+        }
+    ],
+    "require": {}
+}
