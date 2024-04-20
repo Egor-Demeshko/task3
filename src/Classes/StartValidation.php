@@ -11,11 +11,11 @@ class StartValidation
 
     const ALL_UNIQ_ERROR = "All entries should be unique";
 
-    private static $ENTRY_ERROR = "Only odd number of arguments is valid.
-    And greater than or equal 3.
-    For example: php index.php option1 option2 option3
-    or php index.php one two three four five.
-    Odd numbers are 3,5,7,9,11 etc.";
+    private static $ENTRY_ERROR = "Only odd number of arguments is valid, and greater than or equal 3.
+______
+For example: php index.php option1 option2 option3
+or php index.php one two three four five.
+Odd numbers are 3,5,7,9,11 etc.";
 
     public static function validate(array $guesses, Console $console): void
     {
