@@ -36,9 +36,9 @@ class Player implements \App\Interfaces\Player
         return $this->hmac;
     }
 
-    public function getTakenOption()
+    public function getTakenOption(string $typeToReturn): string|int
     {
-        return $this->option;
+        return ($typeToReturn === "string") ? (string) $this->option : (int) $this->option;
     }
 
     public function getKey()
@@ -48,10 +48,9 @@ class Player implements \App\Interfaces\Player
 
     public function makeTurn()
     {
-        if ($this->type === Player::COMPUTER_TYPE) {
+        if ($this->type === self::COMPUTER_TYPE) {
             $max = Game::getGuessesNumber() - 1;
-            $this->option = "2";
-            // (string) rand(0, $max);
+            $this->option = (string) rand(0, $max);
         } else {
             $result = Game::getOption();
 

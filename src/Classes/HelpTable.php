@@ -14,9 +14,9 @@ class HelpTable
         2 => "Win"
     ];
     private static $table = null;
-    public static function createHelpTable(array $table)
+    public static function createHelpTable(array $table, string $consoleTable)
     {
-        self::$table = new \LucidFrame\Console\ConsoleTable();
+        self::$table = new $consoleTable();
         $helpCreator = self::$table;
         $guesses = Game::getGuesses();
 

@@ -11,7 +11,10 @@ class Table
     {
         $this->table = $this->generateTable($lastIndex);
         if ($helpTable) {
-            $helpTable::createHelpTable($this->table);
+            $helpTable::createHelpTable(
+                $this->table,
+                \LucidFrame\Console\ConsoleTable::class
+            );
         }
     }
 
@@ -37,12 +40,6 @@ class Table
 
     public function getWinner(int $option1, int $option2): int
     {
-        // var_dump([
-        // $option1,
-        // $option2
-        // ]);
-        // var_dump($this->table[$option1][$option2]);
-
         return $this->table[$option1][$option2];
     }
 }

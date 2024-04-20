@@ -39,8 +39,8 @@ class Game
         self::$playerTwo->makeTurn();
         self::showMessage(self::createOptionsMessage());
         $winner = self::$table->getWinner(
-            (int) self::$playerOne->getTakenOption(),
-            (int) self::$playerTwo->getTakenOption()
+            self::$playerOne->getTakenOption("int"),
+            self::$playerTwo->getTakenOption("int")
         );
         self::showMessage(
             ($winner > 0) ? "You won" : (($winner < 0) ? "Computer won!" : "Draw!!")
@@ -59,8 +59,8 @@ class Game
     private static function createOptionsMessage(): string
     {
         $message = "";
-        $message .= "Computer turn: " . self::$guesses[self::$playerOne->getTakenOption()] . "\n";
-        $message .= "Your turn: " . self::$guesses[self::$playerTwo->getTakenOption()] . "\n";
+        $message .= "Computer turn: " . self::$guesses[self::$playerOne->getTakenOption("string")] . "\n";
+        $message .= "Your turn: " . self::$guesses[self::$playerTwo->getTakenOption("string")] . "\n";
         return $message;
     }
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App;
 
 require_once "../vendor/autoload.php";
-require_once "./errorMessage.php";
 
 use App\Classes\Crypto;
 use App\Classes\Game;
@@ -13,14 +12,16 @@ use App\Classes\SimpleConsole;
 use App\Classes\Player;
 use App\Classes\Table;
 use App\Classes\HelpTable;
+use App\Classes\StartValidation;
+use App\Classes\Menu;
 
 $guesses = array_slice($argv, 1);
-$console = new SimpleConsole();
+$console = new SimpleConsole(
+    HelpTable::class,
+    Menu::class
+);
 
-if (count($guesses) === 1 || count($guesses) % 2 === 0) {
-    $console->showMessage(ENTRY_ERROR);
-    die;
-}
+StartValidation::validate($guesses, $console);
 $crypto = new Crypto();
 
 Game::init(
