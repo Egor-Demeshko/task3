@@ -33,21 +33,25 @@ class Game
 
     public static function startRound()
     {
+        $first = self::$playerOne;
+        $second = self::$playerTwo;
+        $console = self::$console;
+
         self::generateKeys();
-        self::$playerOne->makeTurn();
-        self::showMessage(self::$playerOne->getHMAC());
-        self::$playerTwo->makeTurn();
+        $first->makeTurn();
+        self::showMessage($first->getHMAC(), "HMAC: ");
+        $second->makeTurn();
         self::showMessage(self::createOptionsMessage());
         $winner = self::$table->getWinner(
-            self::$playerOne->getTakenOption("int"),
-            self::$playerTwo->getTakenOption("int")
+            $first->getTakenOption("int"),
+            $second->getTakenOption("int")
         );
         self::showMessage(
             ($winner > 0) ? "You won" : (($winner < 0) ? "Computer won!" : "Draw!!")
         );
-        self::$console->showMessage(self::$playerTwo->getHMAC());
-        self::$console->showMessage("\nCOMPUTER's secret key: " . bin2hex(self::$playerOne->getKey()));
-        self::$console->showMessage("\nUSER's secret key: " . bin2hex(self::$playerTwo->getKey()));
+        $console->showMessage($second->getHMAC());
+        $console->showMessage(self::createKeyMessage($first->getType(), $first->getKey()));
+        $console->showMessage(self::createKeyMessage($second->getType(), $second->getKey()));
     }
 
     private static function generateKeys()
@@ -81,9 +85,19 @@ class Game
         return count(self::$guesses);
     }
 
-    public static function showMessage(string $message)
+    public static function showMessage(string $message, $prefix = "")
     {
-        self::$console->showMessage($message);
+        self::$console->showMessage($prefix . $message);
+    }
+
+    private static function createKeyMessage(string $type, string $key)
+    {
+        $one = self::$playerOne;
+        $messages = [
+            $one::COMPUTER_TYPE => "\nCOMPUTER's secret key: ",
+            $one::USER_TYPE => "\nUSER's secret key: "
+        ];
+        return  $messages[$type] . ($key);
     }
 
     public static function setTable(Table $table)

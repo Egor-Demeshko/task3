@@ -36,6 +36,11 @@ class Player implements \App\Interfaces\Player
         return $this->hmac;
     }
 
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
     public function getTakenOption(string $typeToReturn): string|int
     {
         return ($typeToReturn === "string") ? (string) $this->option : (int) $this->option;

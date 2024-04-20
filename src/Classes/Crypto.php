@@ -9,12 +9,12 @@ class Crypto implements \App\Interfaces\Crypto
 
     public function generateKey()
     {
-        return random_bytes(256);
+        return bin2hex(random_bytes(32));
     }
 
-    public function getHMAC(string $key, string $hmac)
+    public function getHMAC(string $key, string $option)
     {
-        $holeKey = $key . $hmac;
+        $holeKey = $key . $option;
         return hash("sha3-256", $holeKey);
     }
 }
