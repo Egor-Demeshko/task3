@@ -6,9 +6,9 @@ namespace App\Classes;
 
 use App\Interfaces\Console;
 use App\Interfaces\Player;
+use App\Interfaces\Crypto;
 use App\Classes\Menu;
 use App\Classes\Table;
-
 
 class Game
 {
@@ -17,17 +17,21 @@ class Game
     private static $playerTwo;
     private static $guesses = [];
     private static $table = null;
+    private static $key = "";
+    private static Crypto $crypto;
 
     public static function init(
         Console $console,
         Player $playerOne,
         Player $playerTwo,
-        array $guesses
+        array $guesses,
+        Crypto $crypto
     ) {
         self::$console = $console;
         self::$playerOne = $playerOne;
         self::$playerTwo = $playerTwo;
         self::$guesses = $guesses;
+        self::$crypto = $crypto;
         Menu::createMenu($guesses);
     }
 
@@ -37,27 +41,19 @@ class Game
         $second = self::$playerTwo;
         $console = self::$console;
 
-        self::generateKeys();
-        $first->makeTurn();
+        self::$key = self::$crypto->generateKey();
+        $first->makeTurn(self::$key);
         self::showMessage($first->getHMAC(), "HMAC: ");
-        $second->makeTurn();
+        $second->makeTurn(self::$key);
         self::showMessage(self::createOptionsMessage());
         $winner = self::$table->getWinner(
             $first->getTakenOption("int"),
             $second->getTakenOption("int")
         );
         self::showMessage(
-            ($winner > 0) ? "You won" : (($winner < 0) ? "Computer won!" : "Draw!!")
+            ($winner > 0) ? "You win" : (($winner < 0) ? "Computer win!" : "Draw!!")
         );
-        $console->showMessage($second->getHMAC());
-        $console->showMessage(self::createKeyMessage($first->getType(), $first->getKey()));
-        $console->showMessage(self::createKeyMessage($second->getType(), $second->getKey()));
-    }
-
-    private static function generateKeys()
-    {
-        self::$playerOne->generateKey();
-        self::$playerTwo->generateKey();
+        $console->showMessage("Secret key: " . self::$key);
     }
 
     private static function createOptionsMessage(): string
@@ -88,16 +84,6 @@ class Game
     public static function showMessage(string $message, $prefix = "")
     {
         self::$console->showMessage($prefix . $message);
-    }
-
-    private static function createKeyMessage(string $type, string $key)
-    {
-        $one = self::$playerOne;
-        $messages = [
-            $one::COMPUTER_TYPE => "\nCOMPUTER's secret key: ",
-            $one::USER_TYPE => "\nUSER's secret key: "
-        ];
-        return  $messages[$type] . ($key);
     }
 
     public static function setTable(Table $table)

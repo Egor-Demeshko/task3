@@ -17,13 +17,9 @@ class Player implements \App\Interfaces\Player
     private string $key = '';
     private string $option = '';
     private string $hmac = '';
+
     public function __construct(private string $type, private Crypto $crypto)
     {
-    }
-
-    public function generateKey()
-    {
-        $this->key = $this->crypto->generateKey();
     }
 
     public function generateHMAC(string $key, string $option): string
@@ -46,26 +42,31 @@ class Player implements \App\Interfaces\Player
         return ($typeToReturn === "string") ? (string) $this->option : (int) $this->option;
     }
 
-    public function getKey()
-    {
-        return $this->key;
-    }
-
-    public function makeTurn()
+    public function makeTurn(string $key): void
     {
         if ($this->type === self::COMPUTER_TYPE) {
-            $max = Game::getGuessesNumber() - 1;
-            $this->option = (string) rand(0, $max);
+            $this->computerTurn($key);
         } else {
-            $result = Game::getOption();
-
-            if ($result && gettype($result) === 'string') {
-                $this->option = (string)((int) $result - 1);
-            } else {
-                $result = '';
-            }
+            $this->userTurn();
         }
+    }
 
-        $this->hmac = $this->generateHMAC($this->key, $this->option);
+    private function computerTurn(string $key): void
+    {
+        $max = Game::getGuessesNumber() - 1;
+        $this->option = (string) rand(0, $max);
+        $optionText = Game::getGuesses()[$this->option];
+        $this->hmac = $this->generateHMAC($key, $optionText);
+    }
+
+    private function userTurn(): void
+    {
+        $result = Game::getOption();
+
+        if ($result && gettype($result) === 'string') {
+            $this->option = (string)((int) $result - 1);
+        } else {
+            $result = '';
+        }
     }
 }

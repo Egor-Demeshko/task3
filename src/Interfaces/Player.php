@@ -8,8 +8,7 @@ use App\Classes\Crypto;
 
 interface Player
 {
-    public function generateKey();
     public function generateHMAC(string $key, string $option): string;
     public function getHMAC(): string;
-    public function makeTurn();
+    public function makeTurn(string $key): void;
 }

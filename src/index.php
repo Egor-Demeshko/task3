@@ -28,7 +28,8 @@ Game::init(
     $console,
     new Player(Player::COMPUTER_TYPE, $crypto),
     new Player(Player::USER_TYPE, $crypto),
-    $guesses
+    $guesses,
+    $crypto
 );
 
 $table = new Table(count($guesses), HelpTable::class);
